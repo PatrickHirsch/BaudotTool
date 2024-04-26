@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Baudot Code Crib Dragger</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div id="headerContainer">
+		<h1>Baudot Code Crib Dragger</h1>
+	</div>
+	
+	<div id="formContainer">
+		<form id="cribForm">
+			<label for="ciphertext">Ciphertext:</label>
+			<textarea id="ciphertext" name="ciphertext" rows="4" cols="50"></textarea>
+		
+			<label for="crib">Crib:</label>
+			<input type="text" id="crib" name="crib">
+		
+			<button type="submit" id="submit">Submit</button>
+		</form>
+	</div>
+		
+	<hr>
+		
+	<div id="tableContainer">
+		<table><tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr><tr><th>&nbsp;</th></tr></table>
+	</div>
+		
+	<table id="buttonsContainer">
+		<tr>
+			<th/>
+			<td>
+				<button onclick="dragLeft()">«</button>
+				<button onclick="shiftLeft()"><</button>
+				<button onclick="shiftRight()">></button>
+				<button onclick="dragRight()">»</button>
+			</td>
+			<th/>
+			<td>
+				<button onclick="refillForm(true)">⇅</button>
+				<button onclick="refillForm()">⇑</button>
+			</td>
+		</tr>
+	</table>	
+	
+	<hr>
+	
+	<div id="footerContainer">
+		Created by <a href="https://www.linkedin.com/in/patrickhirsch/">Patrick Hirsch</a> for CSC 483, Cryptology, taught by Professor Chris Christensen at Northern Kentucky University in Spring 2024.
+	</div>
+	
+	<script src="script.js"></script>
+	<script>
+var rayCT=new Array();
+var rayCr=new Array();
+var rayPT=new Array();
+
+document.getElementById('cribForm').addEventListener('submit', function(event)
+{	event.preventDefault();
+
+	rayCT=new Array();
+	rayCr=new Array();
+	rayPT=new Array();
+	
+	var ciphertext=document.getElementById('ciphertext').value;
+	var crib=document.getElementById('crib').value;
+	
+	ciphertext=preprocessInput(ciphertext);
+	crib=preprocessInput(crib,true);
+	
+	rayCT=ciphertext.split('');
+	rayCT=ray2Baudot(rayCT);
+	
+	rayCr=new Array(rayCT.length).fill('');
+	rayCr=ray2Baudot(crib.split('')).slice();
+	
+	rayPT=new Array(rayCT.length).fill('');
+	decryptCrib();
+	
+	buildTable(rayCT,rayCr,rayPT);
+});
+
+	</script>
+</body>
+</html>

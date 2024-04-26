@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Baudot Encoder/Decoder</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div id="headerContainer">
+		<h1>Baudot Encoder/Decoder</h1>
+	</div>
+	
+	<div id="formContainer">
+		<form id="theForm">
+			<label for="userIn">Ciphertext:</label>
+			<textarea id="userIn" name="userIn" rows="4" cols="50"></textarea>
+		
+			<label for="mode">Operation:</label>
+			<select id="mode" name="mode">
+				<option value="print">Printable to Binary</option>
+				<option value="binary">Binary to Printable</option>
+			</select>
+			
+			<br>
+		
+			<button type="submit" id="submit">Submit</button>
+		</form>
+	</div>
+		
+	<hr>
+		
+	<div id="tableContainer">
+	</div>
+	
+	
+	<hr>
+	
+	<div id="footerContainer">
+		Created by <a href="https://www.linkedin.com/in/patrickhirsch/">Patrick Hirsch</a> for CSC 483, Cryptology, taught by Professor Chris Christensen at Northern Kentucky University in Spring 2024.
+	</div>
+	
+	<script src="script.js"></script>
+	<script>
+document.getElementById('theForm').addEventListener('submit', function(event)
+{	event.preventDefault();
+	clearOutput();
+	
+	var userIn=document.getElementById('userIn').value;
+	var mode=document.getElementById('mode').value;
+	
+	var pre=document.createElement('pre');
+	
+	if(mode=='binary')
+	{	str=preprocessInputBinary(userIn);
+		console.log(str);
+		if(str.length%5!=0)
+		{	pre.textContent="ERROR: Input is not of a length that is a multiple of 5.";
+		}else
+		{	ray=new Array();
+			for(var i=0;i<str.length;i+=5)
+			{	ray.push(baudot2Char[parseInt(str.slice(i,i+5),2)]);
+				pre.textContent=ray.join('');
+			}
+		}
+	}
+	else if(mode=='print')
+	{	ray=preprocessInput(userIn).split('');
+		for(var i=0;i<ray.length;i++)
+		{	ray[i]=char2Baudot[ray[i]];
+			ray[i]=ray[i].toString(2);
+			while(ray[i].length<5) ray[i]="0"+ray[i];
+			ray[i]+=" ";
+		}
+		
+		pre.textContent=ray.join('');
+	}
+	
+	document.getElementById('tableContainer').appendChild(pre);
+	
+});
+
+	</script>
+</body>
+</html>
